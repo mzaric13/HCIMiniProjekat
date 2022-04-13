@@ -3,10 +3,68 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:HCIMiniProjekat"
+        xmlns:local="clr-namespace:HCIMiniProjekat" xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Economical indicators for USA" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="0.5*" />
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Label Content="Data:" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right"  Foreground="#000000"/>
+        <ComboBox Grid.Column="1" Grid.ColumnSpan="2" x:Name="dataType" Grid.Row="0" IsEditable="False" SelectionChanged="CheckIntervals"/>
+        <Label Content="Interval:" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Right"  Foreground="#000000"/>
+        <ComboBox Grid.Column="4" Grid.ColumnSpan="2" x:Name="interval" Grid.Row="0" IsEditable="False" />
+
+        <Button Content="Show" Grid.Column="7" Grid.Row="0" Click="DrawHandler" Background="#008080" Foreground="White">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="7"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+
+        <Button Content="Show table" Grid.Column="4" Grid.Row="4" Click="TableHandler" Background="#008080" Foreground="White">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="7"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+
+        <lvc:CartesianChart LegendLocation="Right" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="2">
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Value"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Date"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart LegendLocation="Right" Grid.Column="5" Grid.ColumnSpan="4" Grid.Row="2">
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Value"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Date"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+        </lvc:CartesianChart>
 
     </Grid>
 </Window>
