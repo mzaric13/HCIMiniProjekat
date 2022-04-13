@@ -22,6 +22,7 @@ namespace HCIMiniProjekat
     {
         private List<String> intervalsForGDP = new List<String>();
         private List<String> intervalsForTreasureYields = new List<String>();
+        public LineChart lineChart { get; set; }
 
         public MainWindow()
         {
@@ -34,7 +35,7 @@ namespace HCIMiniProjekat
 
             List<String> dataTypes = new List<String>();
             dataTypes.Add("GDP");
-            dataTypes.Add("Tresure Yields");
+            dataTypes.Add("Treasure Yields");
 
             dataType.ItemsSource = dataTypes;
             dataType.SelectedIndex = 0;
@@ -43,7 +44,33 @@ namespace HCIMiniProjekat
             interval.SelectedIndex = 0;
         }
 
-        public void DrawHandler(object sender, RoutedEventArgs e) { }
+        public void DrawHandler(object sender, RoutedEventArgs e) 
+        {
+            if (dataType.SelectedValue != null && interval.SelectedValue != null)
+            {
+                string dataTypeString = convertToDataTypeString(dataType.SelectedValue.ToString());
+                string intervalString = interval.SelectedValue.ToString().ToLower();
+                Console.WriteLine(intervalString);
+                lineChart = new LineChart();
+                lineChart.fillData(dataTypeString, intervalString);
+                Console.WriteLine(lineChart.dates.Count);
+                Console.WriteLine(lineChart.seriesCollection.Count);
+            }
+        
+        }
+
+        private string convertToDataTypeString(string? v)
+        {
+            if (v == "GDP")
+            {
+                return "REAL_GDP";
+            }
+            else if (v == "Treasure Yields")
+            {
+                return "TREASURY_YIELD";
+            }
+            return null;
+        }
 
         public void TableHandler(object sender, RoutedEventArgs e) { }
 
@@ -58,7 +85,7 @@ namespace HCIMiniProjekat
                     interval.ItemsSource = intervalsForGDP;
                     interval.SelectedIndex = 0;
                     break;
-                case "Tresure Yields":
+                case "Treasure Yields":
                     interval.ItemsSource = intervalsForTreasureYields;
                     interval.SelectedIndex = 0;
                     break;

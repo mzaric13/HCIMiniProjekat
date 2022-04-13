@@ -1,20 +1,20 @@
 ﻿HCIMiniProjekat
 1.0.0.0
 
-winexe
+exe
 C#
 .cs
-C:\Users\Matija\Desktop\HCI\Projekat\HCIMiniProjekat\MiniProjekat\HCIMiniProjekat\obj\Debug\net6.0-windows\
+C:\Users\T\Desktop\HCIMiniProjekat\HCIMiniProjekat\MiniProjekat\HCIMiniProjekat\obj\Debug\net6.0-windows\
 HCIMiniProjekat
 none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
-C:\Users\Matija\Desktop\HCI\Projekat\HCIMiniProjekat\MiniProjekat\HCIMiniProjekat\App.xaml
+C:\Users\T\Desktop\HCIMiniProjekat\HCIMiniProjekat\MiniProjekat\HCIMiniProjekat\App.xaml
 11407045341
 11621198243
-5-1131086407
-196385888819
+8-726761861
+196-2074305561
 MainWindow.xaml;
 
-False
+True
 
