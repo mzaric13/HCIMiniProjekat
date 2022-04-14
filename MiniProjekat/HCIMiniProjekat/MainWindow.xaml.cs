@@ -25,11 +25,14 @@ namespace HCIMiniProjekat
         public LineChart lineChart { get; set; }
         public BarChart barChart { get; set; }
 
+        public TableWindow tableWindow { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
             lineChart = new LineChart();
             barChart = new BarChart();
+            tableWindow = null;
             intervalsForGDP.Add("Quarterly");
             intervalsForGDP.Add("Annual");
             intervalsForTreasureYields.Add("Daily");
@@ -55,6 +58,10 @@ namespace HCIMiniProjekat
                 string intervalString = interval.SelectedValue.ToString().ToLower();
                 lineChart.fillData(dataTypeString, intervalString);
                 barChart.fillData(dataTypeString, intervalString);
+                if (tableWindow != null)
+                {
+                    tableWindow.UpdateData(barChart.tableData);
+                }
             }
             DataContext = this;
         }
@@ -74,13 +81,18 @@ namespace HCIMiniProjekat
 
         public void TableHandler(object sender, RoutedEventArgs e)
         {
-
+            tableWindow = new TableWindow(barChart.tableData);
+            tableWindow.Show();
         }
 
         public void ClearHandler(object sender, RoutedEventArgs e)
         {
             lineChart.clearData();
             barChart.clearData();
+            if (tableWindow != null)
+            {
+                tableWindow.ClearData();
+            }
         }
 
         public void CheckIntervals(object sender, RoutedEventArgs e)

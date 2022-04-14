@@ -15,10 +15,13 @@ namespace HCIMiniProjekat
         public SeriesCollection seriesCollection { get; set; }
         public List<string> datesList { get; set; }
 
+        public List<TableData> tableData { get; set; }
+
         public BarChart()
         {
             seriesCollection = new SeriesCollection();
             datesList = new List<string>();
+            tableData = new List<TableData>();
         }
 
         public void fillData(string apiSource, string interval)
@@ -30,6 +33,7 @@ namespace HCIMiniProjekat
             {
                 RootDataObject? jsonData = JsonSerializer.Deserialize<RootDataObject>(client.DownloadString(queryUri));
                 ChartValues<double> values = new ChartValues<double>();
+                tableData.Clear();
                 foreach (DataObject dataObject in jsonData.data)
                 {
                     if (dataObject.value == ".")
@@ -39,6 +43,7 @@ namespace HCIMiniProjekat
                     double dataValue = Double.Parse(dataObject.value);
                     values.Add(dataValue);
                     datesList.Add(dataObject.date);
+                    tableData.Add(new TableData(dataObject.date, dataValue));
                     if (values.Count > 20)
                     {
                         break;
@@ -56,6 +61,7 @@ namespace HCIMiniProjekat
         {
             seriesCollection.Clear();
             datesList.Clear();
+            tableData.Clear();
         }
     }
 }
