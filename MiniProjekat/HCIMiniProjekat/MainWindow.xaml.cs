@@ -23,11 +23,13 @@ namespace HCIMiniProjekat
         private List<String> intervalsForGDP = new List<String>();
         private List<String> intervalsForTreasureYields = new List<String>();
         public LineChart lineChart { get; set; }
+        public BarChart barChart { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             lineChart = new LineChart();
+            barChart = new BarChart();
             intervalsForGDP.Add("Quarterly");
             intervalsForGDP.Add("Annual");
             intervalsForTreasureYields.Add("Daily");
@@ -52,6 +54,7 @@ namespace HCIMiniProjekat
                 string dataTypeString = convertToDataTypeString(dataType.SelectedValue.ToString());
                 string intervalString = interval.SelectedValue.ToString().ToLower();
                 lineChart.fillData(dataTypeString, intervalString);
+                barChart.fillData(dataTypeString, intervalString);
             }
             DataContext = this;
         }
@@ -77,6 +80,7 @@ namespace HCIMiniProjekat
         public void ClearHandler(object sender, RoutedEventArgs e)
         {
             lineChart.clearData();
+            barChart.clearData();
         }
 
         public void CheckIntervals(object sender, RoutedEventArgs e)

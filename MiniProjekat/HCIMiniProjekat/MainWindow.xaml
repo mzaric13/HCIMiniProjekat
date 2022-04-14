@@ -66,16 +66,16 @@
                 <lvc:Axis Title="Value"></lvc:Axis>
             </lvc:CartesianChart.AxisY>
             <lvc:CartesianChart.AxisX>
-                <lvc:Axis Title="Date" LabelFormatter="{Binding Path=lineChart.dates}"></lvc:Axis>
+                <lvc:Axis Title="Date" Labels="{Binding Path=lineChart.dates}"></lvc:Axis>
             </lvc:CartesianChart.AxisX>
         </lvc:CartesianChart>
 
-        <lvc:CartesianChart LegendLocation="Right" Grid.Column="6" Grid.ColumnSpan="5" Grid.Row="3" Grid.RowSpan="2">
+        <lvc:CartesianChart Series="{Binding Path=barChart.seriesCollection}" LegendLocation="Right" Grid.Column="6" Grid.ColumnSpan="5" Grid.Row="3" Grid.RowSpan="2">
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Value"></lvc:Axis>
             </lvc:CartesianChart.AxisY>
             <lvc:CartesianChart.AxisX>
-                <lvc:Axis Title="Date"></lvc:Axis>
+                <lvc:Axis Title="Date" Labels="{Binding Path=barChart.datesList}"></lvc:Axis>
             </lvc:CartesianChart.AxisX>
         </lvc:CartesianChart>
 
