@@ -24,39 +24,6 @@ namespace HCIMiniProjekat
             tableData = new List<TableData>();
         }
 
-        public void fillData(string apiSource, string interval)
-        {
-            string query = "https://www.alphavantage.co/query?function=" + apiSource.ToUpper() + "&interval=" + interval.ToLower() + "&maturity=3month&apikey=7TRWWJRVSKBSGVYT";
-            Uri queryUri = new Uri(query);
-
-            using (WebClient client = new WebClient())
-            {
-                RootDataObject? jsonData = JsonSerializer.Deserialize<RootDataObject>(client.DownloadString(queryUri));
-                ChartValues<double> values = new ChartValues<double>();
-                tableData.Clear();
-                foreach (DataObject dataObject in jsonData.data)
-                {
-                    if (dataObject.value == ".")
-                    {
-                        dataObject.value = "0.0";
-                    }
-                    double dataValue = Double.Parse(dataObject.value);
-                    values.Add(dataValue);
-                    datesList.Add(dataObject.date);
-                    tableData.Add(new TableData(dataObject.date, dataValue));
-                    if (values.Count > 20)
-                    {
-                        break;
-                    }
-                }
-                ColumnSeries columnSeries = new ColumnSeries();
-                columnSeries.Title = interval + " " + apiSource;
-                columnSeries.Values = values;
-                columnSeries.PointGeometry = null;
-                seriesCollection.Add(columnSeries);
-            }
-        }
-
         public void clearData()
         {
             seriesCollection.Clear();

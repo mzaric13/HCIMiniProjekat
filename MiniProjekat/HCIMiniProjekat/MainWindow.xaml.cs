@@ -1,7 +1,11 @@
-﻿using System;
+﻿using LiveCharts;
+using LiveCharts.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,6 +30,7 @@ namespace HCIMiniProjekat
         public BarChart barChart { get; set; }
 
         public TableWindow tableWindow { get; set; }
+        public ErrorWindow errorWindow { get; set; }
 
         public MainWindow()
         {
@@ -56,11 +61,17 @@ namespace HCIMiniProjekat
             {
                 string dataTypeString = convertToDataTypeString(dataType.SelectedValue.ToString());
                 string intervalString = interval.SelectedValue.ToString().ToLower();
-                lineChart.fillData(dataTypeString, intervalString);
-                barChart.fillData(dataTypeString, intervalString);
-                if (tableWindow != null)
+                try
                 {
-                    tableWindow.UpdateData(barChart.tableData);
+                    fillData(dataTypeString, intervalString);
+                    if (tableWindow != null)
+                    {
+                        tableWindow.UpdateData(barChart.tableData);
+                    }
+                }
+                catch (Exception exception) { 
+                    errorWindow = new ErrorWindow("Error: API not available.");
+                    errorWindow.ShowDialog();
                 }
             }
             DataContext = this;
@@ -81,8 +92,24 @@ namespace HCIMiniProjekat
 
         public void TableHandler(object sender, RoutedEventArgs e)
         {
-            tableWindow = new TableWindow(barChart.tableData);
-            tableWindow.Show();
+            if (tableWindow == null)
+            {
+                if (barChart.tableData.Count() == 0)
+                {
+                    errorWindow = new ErrorWindow("Error: There is no data to be showed.");
+                    errorWindow.ShowDialog();
+                }
+                else
+                {
+                    tableWindow = new TableWindow(barChart.tableData);
+                    tableWindow.Show();
+                }
+            }
+            else
+            {
+                errorWindow = new ErrorWindow("Error: Table Window is already opened.");
+                errorWindow.ShowDialog();
+            }
         }
 
         public void ClearHandler(object sender, RoutedEventArgs e)
@@ -112,6 +139,51 @@ namespace HCIMiniProjekat
                     break;
                 default:
                     break;
+            }
+        }
+
+        public void fillData(string apiSource, string interval) 
+        {
+            string query = "https://www.alphavantage.co/query?function=" + apiSource.ToUpper() + "&interval=" + interval.ToLower() + "&maturity=3month&apikey=7TRWWJRVSKBSGVYT";
+            Uri queryUri = new Uri(query);
+
+            using (WebClient client = new WebClient())
+            {
+                RootDataObject? jsonData = JsonSerializer.Deserialize<RootDataObject>(client.DownloadString(queryUri));
+                ChartValues<double> values = new ChartValues<double>();
+                if (jsonData == null)
+                {
+                    errorWindow = new ErrorWindow("Error: You have used API to much, there was no response.");
+                    errorWindow.ShowDialog();
+                    return;
+                }
+                barChart.tableData.Clear();
+                foreach (DataObject dataObject in jsonData.data)
+                {
+                    if (dataObject.value == ".")
+                    {
+                        dataObject.value = "0.0";
+                    }
+                    double dataValue = Double.Parse(dataObject.value);
+                    values.Add(dataValue);
+                    barChart.datesList.Add(dataObject.date);
+                    barChart.tableData.Add(new TableData(dataObject.date, dataValue));
+                    lineChart.dates.Add(dataObject.date);
+                    if (values.Count > 20)
+                    {
+                        break;
+                    }
+                }
+                ColumnSeries columnSeries = new ColumnSeries();
+                columnSeries.Title = interval + " " + apiSource;
+                columnSeries.Values = values;
+                columnSeries.PointGeometry = null;
+                barChart.seriesCollection.Add(columnSeries);
+                LineSeries lineSeries = new LineSeries();
+                lineSeries.Title = interval + " " + apiSource;
+                lineSeries.Values = values;
+                lineSeries.PointGeometry = null;
+                lineChart.seriesCollection.Add(lineSeries);
             }
         }
     }
