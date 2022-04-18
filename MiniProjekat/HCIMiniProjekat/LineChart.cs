@@ -16,12 +16,10 @@ namespace HCIMiniProjekat
         //https://stackoverflow.com/questions/63515972/how-can-i-update-the-chart-in-livechart-based-on-array-value-with-a-button
         public SeriesCollection seriesCollection { get; set; }
         public List<string> dates { get; set; }
-        //public Func<double, string> YAxis { get; set; }
         public LineChart()
         {
             seriesCollection = new SeriesCollection();
             dates = new List<string>();
-            //YAxis = value => value.
         }
 
         public void clearData()

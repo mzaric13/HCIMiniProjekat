@@ -1,4 +1,5 @@
 ﻿using LiveCharts;
+using LiveCharts.Configurations;
 using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
@@ -92,7 +93,7 @@ namespace HCIMiniProjekat
 
         public void TableHandler(object sender, RoutedEventArgs e)
         {
-            if (tableWindow == null)
+            if (App.Current.Windows.Count < 2)
             {
                 if (barChart.tableData.Count() == 0)
                 {
@@ -144,6 +145,7 @@ namespace HCIMiniProjekat
 
         public void fillData(string apiSource, string interval) 
         {
+            
             string query = "https://www.alphavantage.co/query?function=" + apiSource.ToUpper() + "&interval=" + interval.ToLower() + "&maturity=3month&apikey=7TRWWJRVSKBSGVYT";
             Uri queryUri = new Uri(query);
 
@@ -165,25 +167,41 @@ namespace HCIMiniProjekat
                         dataObject.value = "0.0";
                     }
                     double dataValue = Double.Parse(dataObject.value);
+                    if (dataValue < barChart.minValue)
+                    {
+                        barChart.minValue = dataValue;
+                    }
+                    if (dataValue > barChart.maxValue)
+                    {
+                        barChart.maxValue = dataValue;
+                    }
                     values.Add(dataValue);
                     barChart.datesList.Add(dataObject.date);
                     barChart.tableData.Add(new TableData(dataObject.date, dataValue));
                     lineChart.dates.Add(dataObject.date);
-                    if (values.Count > 20)
+                    if (values.Count > 16)
                     {
                         break;
                     }
                 }
-                ColumnSeries columnSeries = new ColumnSeries();
-                columnSeries.Title = interval + " " + apiSource;
-                columnSeries.Values = values;
-                columnSeries.PointGeometry = null;
-                barChart.seriesCollection.Add(columnSeries);
-                LineSeries lineSeries = new LineSeries();
-                lineSeries.Title = interval + " " + apiSource;
-                lineSeries.Values = values;
-                lineSeries.PointGeometry = null;
-                lineChart.seriesCollection.Add(lineSeries);
+                //https://stackoverflow.com/questions/64516837/livecharts-cartesian-mapping-and-configuration-with-custom-labels
+                lineChart.seriesCollection.Add(new LineSeries()
+                {
+                    Title = interval + " " + apiSource,
+                    Values = values,
+                    Configuration = new CartesianMapper<double>().Y(value => value).Stroke(value => (value == values.Max()) ? Brushes.Red : (value == values.Min()) ? Brushes.Yellow : Brushes.Teal)
+                                                                                        .Fill(value => (value == values.Max()) ? Brushes.Red : (value == values.Min()) ? Brushes.Yellow : Brushes.Teal),
+                    PointGeometry = DefaultGeometries.Circle,
+                    PointGeometrySize = 10,
+                });
+
+                barChart.seriesCollection.Add(new ColumnSeries()
+                {
+                    Title = interval + " " + apiSource,
+                    Values = values,
+                    Configuration = new CartesianMapper<double>().Y(value => value).Stroke(value => (value == values.Max()) ? Brushes.Red : (value == values.Min()) ? Brushes.Yellow: Brushes.BlueViolet)
+                                                                                        .Fill(value => (value == values.Max()) ? Brushes.Red : (value == values.Min()) ? Brushes.Yellow: Brushes.LightBlue),
+                });
             }
         }
     }

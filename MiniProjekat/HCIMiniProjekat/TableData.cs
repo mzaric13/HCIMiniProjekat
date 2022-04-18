@@ -10,6 +10,8 @@ namespace HCIMiniProjekat
     {
         public string date { get; set; }
         public double value { get; set; }
+        public double minValue { get; set; }
+        public double maxValue { get; set; }
 
         public TableData() { }
 
@@ -18,5 +20,6 @@ namespace HCIMiniProjekat
             date = dt;
             value = val;
         }
+
     }
 }

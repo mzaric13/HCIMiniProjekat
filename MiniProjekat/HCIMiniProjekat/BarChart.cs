@@ -16,12 +16,16 @@ namespace HCIMiniProjekat
         public List<string> datesList { get; set; }
 
         public List<TableData> tableData { get; set; }
+        public double minValue { get; set; }
+        public double maxValue { get; set; }
 
         public BarChart()
         {
             seriesCollection = new SeriesCollection();
             datesList = new List<string>();
             tableData = new List<TableData>();
+            minValue = 10000000;
+            maxValue = -10000000;
         }
 
         public void clearData()
@@ -29,6 +33,8 @@ namespace HCIMiniProjekat
             seriesCollection.Clear();
             datesList.Clear();
             tableData.Clear();
+            minValue = 10000000;
+            maxValue = -10000000;
         }
     }
 }
